@@ -3,8 +3,6 @@
 <script type='text/javascript' src="http://z6.ifrm.com/4802/66/0/f7000054/postscribe.js"></script>
 <script type='text/javascript' src="http://z6.ifrm.com/4802/66/0/f7000055/htmlParser.js "></script>
 
-
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
 <script type="text/javascript">
 
 var quickQuote = {};
@@ -35,30 +33,20 @@ $('td:contains([tumblr=):not(td:has(textarea)), div.search_results:contains([tum
 
 $.getScript('http://assets.tumblr.com/post.js');
 
-var replaceTweet = function(element, regexp, url)  {  
-    $.ajax({
-        url: url,
-        dataType: "jsonp",
-        success: function(){ }
-    });
-}
-
 function loadx(element, regexp, data) {
- console.log('twitter callback:');
- console.log(data.html);
  postscribe(element, data.html);
 }
 
 var loadTweet = undefined;
-
 var twitterTagRegexp = new RegExp('\\[twerger\\].*?\\[/twerger\\]');
 $('td:contains([twerger]):not(td:has(textarea)), div.search_results:contains([twerger])').each(function() {
     const twitterIdRegexp = new RegExp('https?://[^/]*twitter.com(?:[^/]*/)*(\\d{4,19})');
     const twitterId = $(this).html().match(twitterIdRegexp)[1];
     console.log('found twerger tag:' + twitterId);
     loadTweet = loadx.bind(null, $(this).get(0), twitterTagRegexp);
-    const url = 'https://api.twitter.com/1/statuses/oembed.json?id=' + twitterId + '&callback=loadTweet';
-    replaceTweet($(this).get(0), twitterTagRegexp, url);
+    const tweetUrl= 'https://api.twitter.com/1/statuses/oembed.json?id=' + twitterId + '&callback=loadTweet';
+    $(this).html($(this).html().replace(twitterTagRegexp, ''));
+    $.ajax({ url: tweetUrl,   dataType: "jsonp"  });
 });
 var replaceTweet = undefined;
 //]]>
