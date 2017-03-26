@@ -1,67 +1,3 @@
-ACP Home Get Help
-Get Help AutoTools
-AutoTools History & Logs
-History & Logs Board Themes
-Board Themes Forums
-Forum Sections Users & Groups
-Users & Groups Board Settings
-Board Settings
-11:06 PM Mar 25 Welcome MindWarped [Sign Out] [Return to board]
-ZetaBoards Service
-Admin CP Controls
-Account Info
-Feedback & Surveys
-Support Tickets
-Ad Removal
-ZetaBoards Premium
-Directory Options
-Domain Manager
-File Manager
-Support Forum
-Documentation
-Board Customization
-Preferences
-Emoticons
-Filters
-Website Maker
-Avatar Gallery
-Portal Manager
-Shoutbox
-Users & Groups
-Member Search
-Remove Members
-Authorization List
-Banning
-Name Changes
-Bulk Mail
-Titles
-Profile Fields
-Groups
-Forum Access
-Joinable Groups
-Pre-Register Member
-IP Address Manager
-Staff Security Portal
-Forum Sections
-Create Sections
-Section Manager
-Section Ordering
-Themes
-Themes
-Board Template
-History
-Moderator History
-Admin History
-Email History
-Warning History
-Board Statistics
-AutoTools
-Topic AutoTools
-Member AutoTools
-Admin CP → Board Template → Edit Board Template
-Notice: Board template edited
-
-Edit Board Template
 Javascripts:
 Any scripts that must be placed before the start of the board.	
 <style>
@@ -228,7 +164,6 @@ Dump Template Script
 // Below the Board
 
 <script type='text/javascript' src='http://z1.ifrm.com/0/2/0/p401849/bbtags31_xanik.js'></script>
-
 <script type='text/javascript' src="http://z6.ifrm.com/4802/66/0/f7000054/postscribe.js"></script>
 <script type='text/javascript' src="http://z6.ifrm.com/4802/66/0/f7000055/htmlParser.js "></script>
 
@@ -268,27 +203,24 @@ $('#tweet').click(function() {
   ZetaInsert('[tweet][/tweet]');
 });
 
-let insertTweet = function(element, payload) {
-   postscribe(element, payload.html);
-};
 var tweetCallbacks = [];
 
 $('td:contains([tweet]):not(td:has(textarea)), div.search_results:contains([tweet])').each(function(index) {
     const twitterIdRegexp = 'https?://(?:[^/])*?twitter.com(?:[^/]*?/)*?(\\d{4,19})';
 
-    tweetCallbacks.push(insertTweet.bind(undefined, $(this).get(0)));
+    const insertTweet =  payload => postscribe($(this).get(0), payload.html);
+    tweetCallbacks.push(insertTweet);
 
     $(this).html().match(new RegExp(twitterIdRegexp, 'g')).forEach(match => {
-    	    const _match =  match.match(twitterIdRegexp);
+          const _match =  match.match(twitterIdRegexp);
 
-    	    const tweetTag = '[tweet]' + _match[0] + '[/tweet]';
-    	    const twitterId = _match[1];
-	    const tweetUrl= 'https://api.twitter.com/1/statuses/oembed.json?id=' + twitterId + '&callback=tweetCallbacks[' + index +']';
-	    $(this).html($(this).html().replace(tweetTag, ''));
-	    $.ajax({ url: tweetUrl,   dataType: "jsonp"  });
+          const tweetTag = '[tweet]' + _match[0] + '[/tweet]';
+          const twitterId = _match[1];
+      const tweetUrl= 'https://api.twitter.com/1/statuses/oembed.json?id=' + twitterId + '&callback=tweetCallbacks[' + index +']';
+      $(this).html($(this).html().replace(tweetTag, ''));
+      $.ajax({ url: tweetUrl,   dataType: "jsonp"  });
     }); 
 });
-insertTweet = undefined;
 //]]>
 </script>
 

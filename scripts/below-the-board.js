@@ -1,5 +1,4 @@
 <script type='text/javascript' src='http://z1.ifrm.com/0/2/0/p401849/bbtags31_xanik.js'></script>
-
 <script type='text/javascript' src="http://z6.ifrm.com/4802/66/0/f7000054/postscribe.js"></script>
 <script type='text/javascript' src="http://z6.ifrm.com/4802/66/0/f7000055/htmlParser.js "></script>
 
@@ -39,15 +38,13 @@ $('#tweet').click(function() {
   ZetaInsert('[tweet][/tweet]');
 });
 
-let insertTweet = function(element, payload) {
-   postscribe(element, payload.html);
-};
 var tweetCallbacks = [];
 
 $('td:contains([tweet]):not(td:has(textarea)), div.search_results:contains([tweet])').each(function(index) {
     const twitterIdRegexp = 'https?://(?:[^/])*?twitter.com(?:[^/]*?/)*?(\\d{4,19})';
 
-    tweetCallbacks.push(insertTweet.bind(undefined, $(this).get(0)));
+    const insertTweet =  payload => postscribe($(this).get(0), payload.html);
+    tweetCallbacks.push(insertTweet);
 
     $(this).html().match(new RegExp(twitterIdRegexp, 'g')).forEach(match => {
             const _match =  match.match(twitterIdRegexp);
@@ -59,6 +56,5 @@ $('td:contains([tweet]):not(td:has(textarea)), div.search_results:contains([twee
         $.ajax({ url: tweetUrl,   dataType: "jsonp"  });
     }); 
 });
-insertTweet = undefined;
 //]]>
 </script>
