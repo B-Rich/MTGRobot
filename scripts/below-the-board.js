@@ -28,7 +28,23 @@ $('td:contains([tumblr=):not(td:has(textarea)), div.search_results:contains([tum
 
 $.getScript('http://assets.tumblr.com/post.js');
 
-$('#c_bbcode button:last').after(' <button type="button" id="twerger">Twerger</button>');
-//]]>
+var replaceHtml = function(element, regexp, replacement)  {  
+   element.innerHTML = element.innerHTML.replace(regexp, replacement);  
+   var codes = element .getElementsByTagName("script");   
+   for(var i=0;i<codes.length;i++)  
+   {  
+       eval(codes[i].text);  
+   }  
+}
 
+const tagRegexp = new RegExp('\\[twerger\\].*?\\[/twerger\\]');
+
+$('td:contains([twerger]):not(td:has(textarea)), div.search_results:contains([twerger])').each(function() {
+	const twitterIdRegexp = new RegExp('https?://[^/]*twitter.com(?:[^/]*/)*(\\d{4,19})');
+    const twitterId = $(this).html().match(twitterIdRegexp)[1];
+	console.log('found twerger tag:' + twitterId);
+    replaceHtml($(this).get(0), tagRegexp,'<div>ID:'  + twitterId + '</div>');
+});
+var replaceHtml = undefined;
+//]]>
 </script>
