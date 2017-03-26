@@ -39,19 +39,26 @@ $('#tweet').click(function() {
   ZetaInsert('[tweet][/tweet]');
 });
 
-function loadx(element, regexp, data) {
- postscribe(element, data.html);
-}
-var loadTweet = undefined;
-var twitterTagRegexp = new RegExp('\\[tweet\\].*?\\[/tweet\\]');
-$('td:contains([tweet]):not(td:has(textarea)), div.search_results:contains([tweet])').each(function() {
-    const twitterIdRegexp = new RegExp('https?://[^/]*twitter.com(?:[^/]*/)*(\\d{4,19})');
-    const twitterId = $(this).html().match(twitterIdRegexp)[1];
-    loadTweet = loadx.bind(null, $(this).get(0), twitterTagRegexp);
-    const tweetUrl= 'https://api.twitter.com/1/statuses/oembed.json?id=' + twitterId + '&callback=loadTweet';
-    $(this).html($(this).html().replace(twitterTagRegexp, ''));
-    $.ajax({ url: tweetUrl,   dataType: "jsonp"  });
+let insertTweet = function(element, payload) {
+   postscribe(element, payload.html);
+};
+var tweetCallbacks = [];
+
+$('td:contains([tweet]):not(td:has(textarea)), div.search_results:contains([tweet])').each(function(index) {
+    const twitterIdRegexp = 'https?://(?:[^/])*?twitter.com(?:[^/]*?/)*?(\\d{4,19})';
+
+    tweetCallbacks.push(insertTweet.bind(undefined, $(this).get(0)));
+
+    $(this).html().match(new RegExp(twitterIdRegexp, 'g')).forEach(match => {
+            const _match =  match.match(twitterIdRegexp);
+
+            const tweetTag = '[tweet]' + _match[0] + '[/tweet]';
+            const twitterId = _match[1];
+        const tweetUrl= 'https://api.twitter.com/1/statuses/oembed.json?id=' + twitterId + '&callback=tweetCallbacks[' + index +']';
+        $(this).html($(this).html().replace(tweetTag, ''));
+        $.ajax({ url: tweetUrl,   dataType: "jsonp"  });
+    }); 
 });
-var replaceTweet = undefined;
+insertTweet = undefined;
 //]]>
 </script>
