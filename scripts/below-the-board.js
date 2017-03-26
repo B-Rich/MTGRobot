@@ -1,9 +1,12 @@
 <script type='text/javascript' src='http://z1.ifrm.com/0/2/0/p401849/bbtags31_xanik.js'></script>
 
-<script type='text/javascript' src='http://z6.ifrm.com/4802/66/0/f7000054/postscribe.js'></script>
-<script type='text/javascript' src='http://z6.ifrm.com/4802/66/0/f7000055/htmlParser.js'></script>
+<script type='text/javascript' src="http://z6.ifrm.com/4802/66/0/f7000054/postscribe.js"></script>
+<script type='text/javascript' src="http://z6.ifrm.com/4802/66/0/f7000055/htmlParser.js "></script>
 
+
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
 <script type="text/javascript">
+
 var quickQuote = {};
 $(function() {
 quickQuote.button = '<img src="http://z6.ifrm.com/4802/66/0/p3001008/qqdash.png" title="20% Faster Quote" />'; // HTML (<img>, <span>, <div>) accepted
@@ -32,15 +35,6 @@ $('td:contains([tumblr=):not(td:has(textarea)), div.search_results:contains([tum
 
 $.getScript('http://assets.tumblr.com/post.js');
 
-var execScript = function(element, regexp, html)  {  
-    element.innerHTML = html;
-    //element.innerHTML = element.innerHTML.replace(regexp, html);  
-    var codes = element.getElementsByTagName("script");   
-    for(var i=0;i<codes.length;i++) {       
-       eval(codes[i].text);  
-    }  
-}
-
 var replaceTweet = function(element, regexp, url)  {  
     $.ajax({
         url: url,
@@ -52,7 +46,7 @@ var replaceTweet = function(element, regexp, url)  {
 function loadx(element, regexp, data) {
  console.log('twitter callback:');
  console.log(data.html);
- execScript(element, regexp, data.html);
+ postscribe(element, data.html);
 }
 
 var loadTweet = undefined;
@@ -62,11 +56,8 @@ $('td:contains([twerger]):not(td:has(textarea)), div.search_results:contains([tw
     const twitterIdRegexp = new RegExp('https?://[^/]*twitter.com(?:[^/]*/)*(\\d{4,19})');
     const twitterId = $(this).html().match(twitterIdRegexp)[1];
     console.log('found twerger tag:' + twitterId);
-
     loadTweet = loadx.bind(null, $(this).get(0), twitterTagRegexp);
-
     const url = 'https://api.twitter.com/1/statuses/oembed.json?id=' + twitterId + '&callback=loadTweet';
-
     replaceTweet($(this).get(0), twitterTagRegexp, url);
 });
 var replaceTweet = undefined;
