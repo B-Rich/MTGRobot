@@ -33,16 +33,20 @@ $('td:contains([tumblr=):not(td:has(textarea)), div.search_results:contains([tum
 
 $.getScript('http://assets.tumblr.com/post.js');
 
+// embedded tweets
+$('#c_bbcode button:last').after(' <button type="button" id="tweet">Tweet</button>');
+$('#tweet').click(function() {
+  ZetaInsert('[tweet][/tweet]');
+});
+
 function loadx(element, regexp, data) {
  postscribe(element, data.html);
 }
-
 var loadTweet = undefined;
-var twitterTagRegexp = new RegExp('\\[twerger\\].*?\\[/twerger\\]');
-$('td:contains([twerger]):not(td:has(textarea)), div.search_results:contains([twerger])').each(function() {
+var twitterTagRegexp = new RegExp('\\[tweet\\].*?\\[/tweet\\]');
+$('td:contains([tweet]):not(td:has(textarea)), div.search_results:contains([tweet])').each(function() {
     const twitterIdRegexp = new RegExp('https?://[^/]*twitter.com(?:[^/]*/)*(\\d{4,19})');
     const twitterId = $(this).html().match(twitterIdRegexp)[1];
-    console.log('found twerger tag:' + twitterId);
     loadTweet = loadx.bind(null, $(this).get(0), twitterTagRegexp);
     const tweetUrl= 'https://api.twitter.com/1/statuses/oembed.json?id=' + twitterId + '&callback=loadTweet';
     $(this).html($(this).html().replace(twitterTagRegexp, ''));
