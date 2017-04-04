@@ -1,11 +1,75 @@
+ACP Home Get Help
+Get Help AutoTools
+AutoTools History & Logs
+History & Logs Board Themes
+Board Themes Forums
+Forum Sections Users & Groups
+Users & Groups Board Settings
+Board Settings
+9:31 PM Apr 3 Welcome MindWarped [Sign Out] [Return to board]
+ZetaBoards Service
+Admin CP Controls
+Account Info
+Feedback & Surveys
+Support Tickets
+Ad Removal
+ZetaBoards Premium
+Directory Options
+Domain Manager
+File Manager
+Support Forum
+Documentation
+Board Customization
+Preferences
+Emoticons
+Filters
+Website Maker
+Avatar Gallery
+Portal Manager
+Shoutbox
+Users & Groups
+Member Search
+Remove Members
+Authorization List
+Banning
+Name Changes
+Bulk Mail
+Titles
+Profile Fields
+Groups
+Forum Access
+Joinable Groups
+Pre-Register Member
+IP Address Manager
+Staff Security Portal
+Forum Sections
+Create Sections
+Section Manager
+Section Ordering
+Themes
+Themes
+Board Template
+History
+Moderator History
+Admin History
+Email History
+Warning History
+Board Statistics
+AutoTools
+Topic AutoTools
+Member AutoTools
+Admin CP → Board Template → Edit Board Template
+Notice: Board template edited
+
+Edit Board Template
 Javascripts:
-Any scripts that must be placed before the start of the board.	
+Any scripts that must be placed before the start of the board.  
 <style>
   .editby {
     display: none;
   }
 </style>
-<script type='text/javascript' src="http://www.devilsbiscuit.com/ML/cardtags.js"></script>
+<script type='text/javascript' src="http://z6.ifrm.com/4802/66/0/p3001027/cardtags.js"></script>
 <script type='text/javascript' src="http://www.devilsbiscuit.com/ML/enablehtmlvideotags.js"></script>
 <link rel="shortcut icon" href="http://z6.ifrm.com/4802/66/0/p1000012/favicon.ico" />
 
@@ -18,15 +82,15 @@ Any scripts that must be placed before the start of the board.
 <script type='text/javascript' src="http://z6.ifrm.com/4802/66/0/f5019598/lodashmin.js"></script>
 
 Top of the page:
-Content that goes at the very top of the page.	
+Content that goes at the very top of the page.  
 Above the Board:
-Content that goes before the main content of the board.	
+Content that goes before the main content of the board. 
 <a href="http://s6.zetaboards.com/EmpireLost">Home</a> · <a href="http://s6.zetaboards.com/EmpireLost/search/?c=5">Active Topics</a><br />
 <a href="http://www.goodgamery.com/">GoodGamery</a> · <a href="http://forums.goodgamery.com">Forums</a> - Our friend and ally in these dark times
 <br />
 <br />
 Below the Board:
-Content that goes after the main content of the board.	
+Content that goes after the main content of the board.  
 <script type='text/javascript' src='http://z1.ifrm.com/0/2/0/p401849/bbtags31_xanik.js'></script>
 
 <script type='text/javascript' src="http://z6.ifrm.com/4802/66/0/f7000054/postscribe.js"></script>
@@ -68,34 +132,32 @@ $('#tweet').click(function() {
   ZetaInsert('[tweet][/tweet]');
 });
 
-let insertTweet = function(element, payload) {
-   postscribe(element, payload.html);
-};
 var tweetCallbacks = [];
-
-$('td:contains([tweet]):not(td:has(textarea)), div.search_results:contains([tweet])').each(function(index) {
-    const twitterIdRegexp = 'https?://(?:[^/])*?twitter.com(?:[^/]*?/)*?(\\d{4,19})';
-
-    tweetCallbacks.push(insertTweet.bind(undefined, $(this).get(0)));
+var tweetCount = 0;
+$('td:contains([tweet]):not(td:has(textarea)), div.search_results:contains([tweet])').each(function() {
+    var twitterIdRegexp = '\\[tweet\\]https?://(?:[^/])*?twitter.com(?:[^/]*?/)*?(\\d{4,20})(?:/.*?)?\\[/tweet\\]';
 
     $(this).html().match(new RegExp(twitterIdRegexp, 'g')).forEach(match => {
-    	    const _match =  match.match(twitterIdRegexp);
+          const _match =  match.match(twitterIdRegexp);
+            const spanId = 'embedded-tweet-' + Math.floor((Math.random() * 100000000000));
+        
+      $(this).html($(this).html().replace(_match[0], '<span id="' + spanId + '"></span>'));
 
-    	    const tweetTag = '[tweet]' + _match[0] + '[/tweet]';
-    	    const twitterId = _match[1];
-	    const tweetUrl= 'https://api.twitter.com/1/statuses/oembed.json?id=' + twitterId + '&callback=tweetCallbacks[' + index +']';
-	    $(this).html($(this).html().replace(tweetTag, ''));
-	    $.ajax({ url: tweetUrl,   dataType: "jsonp"  });
+            tweetCallbacks.push(payload => postscribe($('span#'+spanId).get(0), payload.html));
+
+      const tweetUrl= 'https://api.twitter.com/1/statuses/oembed.json?id=' +  _match[1] + '&callback=tweetCallbacks[' + (tweetCount++) +']';
+      $.ajax({ url: tweetUrl,   dataType: "jsonp"  });
     }); 
 });
-insertTweet = undefined;
 //]]>
 </script>
 Above the copyright:
-Content just before the copyright and end of the page	
+Content just before the copyright and end of the page 
 <script type="text/javascript"> installCardTags(); </script> 
 <script type="text/javascript"> installQuoteUnnester(); </script>
+<script type="text/javascript" src="http://z6.ifrm.com/4802/66/0/f7000065/clnfy.js"></script>
 <script type='text/javascript' src="http://z6.ifrm.com/4802/66/0/f5019614/sn_ps.js"></script>
+
 <script type="text/javascript">
 function getMember() {var x = document.getElementById('top_info').getElementsByTagName('a')[0];if( x.href.match(/\/login\//) ) {return 'Guest';}else{return x.innerHTML;}}ubb_tag("You","you",getMember(),-1,"Display member logged in");</script>
 <script type="text/javascript"> window.onload=function(){
@@ -128,7 +190,7 @@ window.onload = function() {
   }
 }</script>
 Menu:
-Additional menus that are placed right after the submenu	
+Additional menus that are placed right after the submenu  
 <script id="twitter-wjs" type="text/javascript" async defer src="//platform.twitter.com/widgets.js"></script>
 Edit Board Template
 Hosted for free by ZetaBoards ‐ © 2004-2016 Zathyus Networks, Inc.
@@ -140,7 +202,7 @@ Dump Template Script
     display: none;
   }
 </style>
-<script type='text/javascript' src="http://www.devilsbiscuit.com/ML/cardtags.js"></script>
+<script type='text/javascript' src="http://z6.ifrm.com/4802/66/0/p3001027/cardtags.js"></script>
 <script type='text/javascript' src="http://www.devilsbiscuit.com/ML/enablehtmlvideotags.js"></script>
 <link rel="shortcut icon" href="http://z6.ifrm.com/4802/66/0/p1000012/favicon.ico" />
 
@@ -164,6 +226,7 @@ Dump Template Script
 // Below the Board
 
 <script type='text/javascript' src='http://z1.ifrm.com/0/2/0/p401849/bbtags31_xanik.js'></script>
+
 <script type='text/javascript' src="http://z6.ifrm.com/4802/66/0/f7000054/postscribe.js"></script>
 <script type='text/javascript' src="http://z6.ifrm.com/4802/66/0/f7000055/htmlParser.js "></script>
 
@@ -204,20 +267,19 @@ $('#tweet').click(function() {
 });
 
 var tweetCallbacks = [];
-
-$('td:contains([tweet]):not(td:has(textarea)), div.search_results:contains([tweet])').each(function(index) {
-    const twitterIdRegexp = 'https?://(?:[^/])*?twitter.com(?:[^/]*?/)*?(\\d{4,19})';
-
-    const insertTweet =  payload => postscribe($(this).get(0), payload.html);
-    tweetCallbacks.push(insertTweet);
+var tweetCount = 0;
+$('td:contains([tweet]):not(td:has(textarea)), div.search_results:contains([tweet])').each(function() {
+    var twitterIdRegexp = '\\[tweet\\]https?://(?:[^/])*?twitter.com(?:[^/]*?/)*?(\\d{4,20})(?:/.*?)?\\[/tweet\\]';
 
     $(this).html().match(new RegExp(twitterIdRegexp, 'g')).forEach(match => {
           const _match =  match.match(twitterIdRegexp);
+            const spanId = 'embedded-tweet-' + Math.floor((Math.random() * 100000000000));
+        
+      $(this).html($(this).html().replace(_match[0], '<span id="' + spanId + '"></span>'));
 
-          const tweetTag = '[tweet]' + _match[0] + '[/tweet]';
-          const twitterId = _match[1];
-      const tweetUrl= 'https://api.twitter.com/1/statuses/oembed.json?id=' + twitterId + '&callback=tweetCallbacks[' + index +']';
-      $(this).html($(this).html().replace(tweetTag, ''));
+            tweetCallbacks.push(payload => postscribe($('span#'+spanId).get(0), payload.html));
+
+      const tweetUrl= 'https://api.twitter.com/1/statuses/oembed.json?id=' +  _match[1] + '&callback=tweetCallbacks[' + (tweetCount++) +']';
       $.ajax({ url: tweetUrl,   dataType: "jsonp"  });
     }); 
 });
@@ -228,7 +290,9 @@ $('td:contains([tweet]):not(td:has(textarea)), div.search_results:contains([twee
 
 <script type="text/javascript"> installCardTags(); </script> 
 <script type="text/javascript"> installQuoteUnnester(); </script>
+<script type="text/javascript" src="http://z6.ifrm.com/4802/66/0/f7000065/clnfy.js"></script>
 <script type='text/javascript' src="http://z6.ifrm.com/4802/66/0/f5019614/sn_ps.js"></script>
+
 <script type="text/javascript">
 function getMember() {var x = document.getElementById('top_info').getElementsByTagName('a')[0];if( x.href.match(/\/login\//) ) {return 'Guest';}else{return x.innerHTML;}}ubb_tag("You","you",getMember(),-1,"Display member logged in");</script>
 <script type="text/javascript"> window.onload=function(){

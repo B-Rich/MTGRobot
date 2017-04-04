@@ -1,4 +1,5 @@
 <script type='text/javascript' src='http://z1.ifrm.com/0/2/0/p401849/bbtags31_xanik.js'></script>
+
 <script type='text/javascript' src="http://z6.ifrm.com/4802/66/0/f7000054/postscribe.js"></script>
 <script type='text/javascript' src="http://z6.ifrm.com/4802/66/0/f7000055/htmlParser.js "></script>
 
@@ -39,20 +40,19 @@ $('#tweet').click(function() {
 });
 
 var tweetCallbacks = [];
-
-$('td:contains([tweet]):not(td:has(textarea)), div.search_results:contains([tweet])').each(function(index) {
-    const twitterIdRegexp = 'https?://(?:[^/])*?twitter.com(?:[^/]*?/)*?(\\d{4,19})';
-
-    const insertTweet =  payload => postscribe($(this).get(0), payload.html);
-    tweetCallbacks.push(insertTweet);
+var tweetCount = 0;
+$('td:contains([tweet]):not(td:has(textarea)), div.search_results:contains([tweet])').each(function() {
+    var twitterIdRegexp = '\\[tweet\\]https?://(?:[^/])*?twitter.com(?:[^/]*?/)*?(\\d{4,20})(?:/.*?)?\\[/tweet\\]';
 
     $(this).html().match(new RegExp(twitterIdRegexp, 'g')).forEach(match => {
             const _match =  match.match(twitterIdRegexp);
+            const spanId = 'embedded-tweet-' + Math.floor((Math.random() * 100000000000));
+        
+        $(this).html($(this).html().replace(_match[0], '<span id="' + spanId + '"></span>'));
 
-            const tweetTag = '[tweet]' + _match[0] + '[/tweet]';
-            const twitterId = _match[1];
-        const tweetUrl= 'https://api.twitter.com/1/statuses/oembed.json?id=' + twitterId + '&callback=tweetCallbacks[' + index +']';
-        $(this).html($(this).html().replace(tweetTag, ''));
+            tweetCallbacks.push(payload => postscribe($('span#'+spanId).get(0), payload.html));
+
+        const tweetUrl= 'https://api.twitter.com/1/statuses/oembed.json?id=' +  _match[1] + '&callback=tweetCallbacks[' + (tweetCount++) +']';
         $.ajax({ url: tweetUrl,   dataType: "jsonp"  });
     }); 
 });
